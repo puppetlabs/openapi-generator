@@ -57,11 +57,15 @@ func (dst *{{classname}}) UnmarshalJSON(data []byte) error {
 	// try to unmarshal data into {{{.}}}
 	err = json.Unmarshal(data, &dst.{{{.}}})
 	if err == nil {
-		json{{{.}}}, _ := json.Marshal(dst.{{{.}}})
-		if string(json{{{.}}}) == "{}" { // empty struct
-			dst.{{{.}}} = nil
+		json{{{.}}}, err := json.Marshal(dst.{{{.}}})
+		if err == nil {
+			if string(json{{{.}}}) == "{}" { // empty struct
+				dst.{{{.}}} = nil
+			} else {
+				match++
+			}
 		} else {
-			match++
+			dst.{{{.}}} = nil
 		}
 	} else {
 		dst.{{{.}}} = nil
